@@ -1,0 +1,508 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>ResizeKB | Files. Pixels. Limits.</title>
+<meta name="description" content="ResizeKB is a private, in-browser studio for photos and signatures that must meet an exact pixel and KB limit. Crop, batch and PDF export, measured on your device.">
+<link rel="canonical" href="https://YOUR-DOMAIN.example/">
+<meta property="og:title" content="ResizeKB — We make files fit.">
+<meta property="og:description" content="A private, in-browser studio for photos and signatures with exact pixel and KB limits.">
+<meta property="og:type" content="website">
+<meta name="robots" content="index,follow">
+<meta name="theme-color" content="#000000">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:ital,wght@0,400;0,500;0,600;1,400;1,500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="styles.css">
+<script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"WebApplication","name":"ResizeKB","applicationCategory":"MultimediaApplication","operatingSystem":"Any","offers":{"@type":"Offer","price":"0","priceCurrency":"USD"},"featureList":["Resize images to exact pixel dimensions","Compress to a KB limit","Crop and rotate","Batch resize with ZIP download","Image to PDF under a size limit","Everything runs on the device"]},{"@type":"FAQPage","mainEntity":[{"@type":"Question","name":"How do I reduce a photo to 50 KB?","acceptedAnswer":{"@type":"Answer","text":"Upload the photo, choose File size mode, press the 50 KB shortcut, pick JPG and press Process. The tool measures the real output file and tells you whether the limit was met."}},{"@type":"Question","name":"Are my photos uploaded to a server?","acceptedAnswer":{"@type":"Answer","text":"No. Decoding, cropping, resizing and PDF creation all happen inside your browser, so the files never leave your device."}},{"@type":"Question","name":"Why can a PNG not reach my size limit?","acceptedAnswer":{"@type":"Answer","text":"PNG is lossless, so quality cannot be lowered. ResizeKB shrinks the pixel dimensions instead; for strict KB limits JPG or WebP is usually better."}},{"@type":"Question","name":"Can I resize several images at once?","acceptedAnswer":{"@type":"Answer","text":"Yes. Add multiple images, apply one set of limits, then process them together and download all results as a ZIP file."}},{"@type":"Question","name":"Does the DPI setting add detail?","acceptedAnswer":{"@type":"Answer","text":"No. The DPI option writes a print-resolution tag into the file for forms that check it. It does not create additional pixels or improve sharpness."}}]}]}</script>
+</head>
+<body>
+<a class="skip-link" href="#tool">Skip to the tool</a>
+
+<main id="main">
+  <div class="stage" id="stage">
+    <div class="stage__media" aria-hidden="true">
+      <video class="stage__video" id="stageVideo" autoplay muted loop playsinline preload="auto">
+        <source src="https://strvid.nyc3.cdn.digitaloceanspaces.com/motionsite/floating_flowers.mp4" type="video/mp4">
+      </video>
+      <div class="stage__scrim"></div>
+      <div class="stage__fallback"></div>
+    </div>
+
+    <header class="masthead">
+      <div class="masthead__row">
+        <a class="brand" href="./" aria-label="ResizeKB home">
+          <span class="brand__name">ResizeKB</span>
+        </a>
+
+        <nav class="nav" aria-label="Primary">
+          <a href="#tool">Tool</a>
+          <a href="#presets">Presets</a>
+          <a href="#faq">FAQ</a>
+          <a href="PRIVACY.md">Privacy</a>
+        </nav>
+
+        <a class="btn btn--ghost btn--nav" href="#tool">
+          Start resizing
+          <svg class="arrow" viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17 17 7M7 7h10v10"/></svg>
+        </a>
+
+        <button class="menu-btn" id="menuBtn" type="button" aria-expanded="false" aria-controls="mobileMenu" aria-label="Open menu">
+          <span aria-hidden="true"></span>
+          <span aria-hidden="true"></span>
+        </button>
+      </div>
+
+      <div class="mobile-menu" id="mobileMenu" hidden>
+        <a href="#tool">Tool</a>
+        <a href="#presets">Presets</a>
+        <a href="#faq">FAQ</a>
+        <a href="PRIVACY.md">Privacy</a>
+      </div>
+    </header>
+
+    <section class="hero" aria-labelledby="hero-title">
+      <p class="kicker">Files. Pixels. Limits.</p>
+      <h1 class="hero__title" id="hero-title">We make files fit.</h1>
+      <p class="hero__sub">ResizeKB is a private, in-browser studio for photos and signatures that have to meet an exact pixel and KB limit. No uploads, no accounts — just measured output.</p>
+      <div class="hero__cta">
+        <a class="btn btn--primary" href="#tool">
+          Explore the tool
+          <svg class="arrow" viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17 17 7M7 7h10v10"/></svg>
+        </a>
+      </div>
+      <ul class="hero__meta">
+        <li>On-device processing</li>
+        <li>JPG · PNG · WebP</li>
+        <li>Measured output</li>
+      </ul>
+    </section>
+
+    <div class="stage__foot" aria-hidden="true">
+      <span>Scroll to resize</span>
+      <span class="stage__line"></span>
+    </div>
+  </div>
+
+  <section class="app" id="tool" aria-labelledby="tool-title">
+    <div class="app__head">
+      <p class="kicker">The studio</p>
+      <h2 class="display" id="tool-title">Precision, measured.</h2>
+      <p class="app__sub">Set the limits your form asks for. ResizeKB draws, compresses and measures the real file before you download it — nothing ever leaves this tab.</p>
+    </div>
+
+    <noscript><p class="notice">ResizeKB needs JavaScript because images are processed in your browser. Nothing is uploaded either way.</p></noscript>
+
+    <div class="workspace">
+      <div class="col">
+
+        <section class="card" aria-labelledby="h-upload">
+          <div class="card__head">
+            <span class="step">01</span>
+            <h2 id="h-upload">Add your images</h2>
+            <span class="head-hint" id="fileCount"></span>
+          </div>
+
+          <div class="dropzone" id="drop" tabindex="0" role="button" aria-describedby="dropHint">
+            <span class="dropzone__icon" aria-hidden="true">
+              <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="3"/><circle cx="8.5" cy="8.5" r="1.8"/><path d="m21 15-4.5-4.5L6 21"/></svg>
+            </span>
+            <span class="dropzone__title">Drop images here</span>
+            <span class="dropzone__hint" id="dropHint">or <u>browse files</u> · JPG, PNG, WebP · up to 25 MB</span>
+            <span class="dropzone__paste">Paste from the clipboard with <kbd>Ctrl</kbd>/<kbd>⌘</kbd> + <kbd>V</kbd></span>
+          </div>
+          <input type="file" id="file" accept="image/jpeg,image/png,image/webp" multiple hidden>
+
+          <ul class="queue" id="queue" hidden></ul>
+          <div class="facts" id="srcinfo" hidden></div>
+          <p class="msg" id="upmsg" role="alert"></p>
+        </section>
+
+        <section class="card" aria-labelledby="h-limits">
+          <div class="card__head">
+            <span class="step">02</span>
+            <h2 id="h-limits">Set the limits</h2>
+          </div>
+
+          <div class="grid-2">
+            <div class="field">
+              <label for="preset">Preset</label>
+              <select id="preset"></select>
+            </div>
+            <div class="field">
+              <label for="kind">Workflow</label>
+              <select id="kind">
+                <option value="photo">Photo / document photo</option>
+                <option value="sig">Signature (brightness + contrast)</option>
+              </select>
+            </div>
+          </div>
+          <p class="note" id="presetnote"></p>
+
+          <div class="field">
+            <span class="field__label">Quick maximum size</span>
+            <div class="chips" id="chips">
+              <button type="button" class="chip" data-kb="20">20 KB</button>
+              <button type="button" class="chip" data-kb="50">50 KB</button>
+              <button type="button" class="chip" data-kb="100">100 KB</button>
+              <button type="button" class="chip" data-kb="200">200 KB</button>
+              <button type="button" class="chip" data-kb="500">500 KB</button>
+            </div>
+          </div>
+
+          <div class="field">
+            <span class="field__label" id="modeLabel">What must the result meet?</span>
+            <div class="seg" role="radiogroup" aria-labelledby="modeLabel">
+              <label class="seg__opt"><input type="radio" name="mode" value="A" checked><span>Exact pixels</span></label>
+              <label class="seg__opt"><input type="radio" name="mode" value="B"><span>File size</span></label>
+              <label class="seg__opt"><input type="radio" name="mode" value="C"><span>Both</span></label>
+            </div>
+            <p class="note" id="modeNote">Draws the image at exactly these pixels, then compresses at your chosen quality.</p>
+          </div>
+
+          <div class="grid-2" id="dimrow">
+            <div class="field"><label for="w">Width (px)</label><input id="w" type="number" inputmode="numeric" min="1" max="8000" step="1" value="200"></div>
+            <div class="field"><label for="h">Height (px)</label><input id="h" type="number" inputmode="numeric" min="1" max="8000" step="1" value="230"></div>
+          </div>
+
+          <div class="grid-2" id="szrow">
+            <div class="field"><label for="minkb">Minimum size (KB)</label><input id="minkb" type="number" inputmode="decimal" min="0" step="any" placeholder="optional" value="20"></div>
+            <div class="field"><label for="maxkb">Maximum size (KB)</label><input id="maxkb" type="number" inputmode="decimal" min="1" step="any" value="50"></div>
+          </div>
+
+          <div class="grid-3">
+            <div class="field">
+              <label for="fit">Fit method</label>
+              <select id="fit">
+                <option value="cover">Crop to fill</option>
+                <option value="contain">Fit inside (pad with background)</option>
+                <option value="stretch">Stretch (distorts)</option>
+              </select>
+            </div>
+            <div class="field">
+              <label for="fmt">Format</label>
+              <select id="fmt">
+                <option value="image/jpeg">JPG</option>
+                <option value="image/webp">WebP</option>
+                <option value="image/png">PNG</option>
+              </select>
+            </div>
+            <div class="field">
+              <label for="dpi">Print DPI tag</label>
+              <select id="dpi">
+                <option value="">Don't set</option>
+                <option value="72">72 DPI</option>
+                <option value="96">96 DPI</option>
+                <option value="150">150 DPI</option>
+                <option value="300" selected>300 DPI</option>
+                <option value="600">600 DPI</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="grid-2">
+            <div class="field">
+              <label for="bg">Background colour</label>
+              <div class="color-row">
+                <input id="bg" type="color" value="#ffffff">
+                <span class="note">Used by JPG and padded areas</span>
+              </div>
+            </div>
+            <div class="field" id="qfield">
+              <label for="q">Quality <span class="value" id="qv">90%</span></label>
+              <input id="q" type="range" min="10" max="100" step="1" value="90">
+              <p class="note" id="qhint">Used as the starting quality for the exact-size export.</p>
+            </div>
+          </div>
+
+          <div class="grid-2" id="adj" hidden>
+            <div class="field"><label for="br">Brightness <span class="value" id="brv">100%</span></label><input id="br" type="range" min="50" max="150" step="1" value="100"></div>
+            <div class="field"><label for="ct">Contrast <span class="value" id="ctv">100%</span></label><input id="ct" type="range" min="50" max="200" step="1" value="100"></div>
+          </div>
+
+          <p class="note note--warn" id="fitwarn" hidden></p>
+          <p class="note" id="batchNote" hidden></p>
+
+          <div class="actions">
+            <button type="button" class="btn btn--primary" id="go" disabled>
+              <span class="spinner" aria-hidden="true"></span>
+              <span class="btn__label">Process image</span>
+            </button>
+            <button type="button" class="btn btn--ghost" id="reset">Reset settings</button>
+          </div>
+        </section>
+
+        <section class="card" aria-labelledby="h-edit">
+          <div class="card__head">
+            <span class="step step--muted">03</span>
+            <h2 id="h-edit">Crop, rotate &amp; stamp</h2>
+            <span class="head-hint">Optional</span>
+          </div>
+          <p class="note">Turn a phone photo the right way up, flip a signature, cut the image to the shape your form expects, or print a name and date on it. The crop and stamp are applied before resizing.</p>
+
+          <div class="toolbar">
+            <button type="button" class="btn btn--ghost btn--sm" id="rotL" disabled>⟲ 90° left</button>
+            <button type="button" class="btn btn--ghost btn--sm" id="rotR" disabled>⟳ 90° right</button>
+            <button type="button" class="btn btn--ghost btn--sm" id="flipH" disabled>Flip horizontal</button>
+            <button type="button" class="btn btn--ghost btn--sm" id="flipV" disabled>Flip vertical</button>
+            <button type="button" class="btn btn--ghost btn--sm" id="cropToggle" aria-pressed="false" disabled>Crop</button>
+          </div>
+
+          <div class="crop" id="cropWrap" hidden>
+            <div class="crop__stage" id="cropStage">
+              <canvas id="cropCanvas" aria-label="Image crop editor"></canvas>
+              <div class="crop__box" id="cropBox" hidden>
+                <span class="crop__handle" data-h="nw"></span>
+                <span class="crop__handle" data-h="n"></span>
+                <span class="crop__handle" data-h="ne"></span>
+                <span class="crop__handle" data-h="e"></span>
+                <span class="crop__handle" data-h="se"></span>
+                <span class="crop__handle" data-h="s"></span>
+                <span class="crop__handle" data-h="sw"></span>
+                <span class="crop__handle" data-h="w"></span>
+              </div>
+            </div>
+            <div class="crop__bar">
+              <p class="note" id="cropInfo"></p>
+              <label class="check"><input type="checkbox" id="cropLock" checked> Lock to output ratio</label>
+              <button type="button" class="btn btn--ghost btn--sm" id="cropClear" disabled>Select all</button>
+            </div>
+          </div>
+
+          <div class="stamp">
+            <label class="check"><input type="checkbox" id="stampOn"> Add a name / date stamp</label>
+            <div class="stamp__fields" id="stampFields" hidden>
+              <div class="grid-2">
+                <div class="field">
+                  <label for="stampText">Stamp text</label>
+                  <input id="stampText" maxlength="40" autocomplete="name" placeholder="e.g. Anita Sharma">
+                </div>
+                <div class="field">
+                  <label for="stampPos">Position</label>
+                  <select id="stampPos">
+                    <option value="br" selected>Bottom right</option>
+                    <option value="bl">Bottom left</option>
+                    <option value="bc">Bottom centre</option>
+                    <option value="tr">Top right</option>
+                    <option value="tl">Top left</option>
+                  </select>
+                </div>
+                <div class="field">
+                  <label for="stampSize">Size</label>
+                  <select id="stampSize">
+                    <option value="small">Small</option>
+                    <option value="medium" selected>Medium</option>
+                    <option value="large">Large</option>
+                  </select>
+                </div>
+                <div class="field">
+                  <label for="stampColor">Text colour</label>
+                  <div class="color-row">
+                    <input id="stampColor" type="color" value="#111111">
+                    <span class="note">A soft halo keeps it readable</span>
+                  </div>
+                </div>
+              </div>
+              <label class="check"><input type="checkbox" id="stampDate"> Append today's date</label>
+              <p class="note" id="stampNote"></p>
+            </div>
+          </div>
+        </section>
+      </div>
+
+      <div class="col">
+        <section class="card" aria-labelledby="h-result">
+          <div class="card__head">
+            <span class="step step--muted">04</span>
+            <h2 id="h-result">Result</h2>
+            <span class="badge" id="resultBadge" hidden></span>
+          </div>
+
+          <div class="compare" id="compare" hidden tabindex="0" role="slider" aria-label="Before and after comparison" aria-valuemin="0" aria-valuemax="100" aria-valuenow="50">
+            <img class="compare__img" id="cmpBefore" alt="Original image">
+            <img class="compare__img" id="cmpAfter" alt="Resized result">
+            <div class="compare__divider" id="cmpDivider"><span class="compare__knob" aria-hidden="true"></span></div>
+            <span class="compare__tag compare__tag--left">Before</span>
+            <span class="compare__tag compare__tag--right">After</span>
+          </div>
+
+          <div class="preview" id="prev">
+            <div class="preview__empty">
+              <svg viewBox="0 0 24 24" width="26" height="26" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="3"/><circle cx="8.5" cy="8.5" r="1.8"/><path d="m21 15-4.5-4.5L6 21"/></svg>
+              <p>Your resized image appears here.</p>
+              <p class="note">Size, dimensions and pass/fail are measured on the real output file.</p>
+            </div>
+          </div>
+
+          <div class="gauge" id="gauge" hidden>
+            <div class="gauge__head"><span>File size</span><span class="note" id="gaugeRange"></span></div>
+            <div class="gauge__track">
+              <div class="gauge__band" id="gaugeBand" hidden></div>
+              <div class="gauge__marker" id="gaugeMarker"></div>
+            </div>
+            <div class="gauge__scale"><span>0</span><span id="gaugeMax"></span></div>
+          </div>
+
+          <table class="metrics" id="res"></table>
+          <div class="verdict" id="verdict" role="status" aria-live="polite"></div>
+
+          <div class="actions">
+            <button type="button" class="btn btn--primary" id="dl" disabled>Download</button>
+            <button type="button" class="btn btn--ghost" id="copy" disabled>Copy image</button>
+          </div>
+        </section>
+
+        <section class="card" aria-labelledby="h-pdf">
+          <div class="card__head">
+            <span class="step step--muted">＋</span>
+            <h2 id="h-pdf">Image → PDF</h2>
+          </div>
+          <p class="note">Uses the current image and crop, centred on one page, and measures the PDF before you download it.</p>
+
+          <div class="grid-2">
+            <div class="field"><label for="pdfmax">Maximum PDF size (KB)</label><input id="pdfmax" type="number" inputmode="numeric" min="20" step="1" value="200"></div>
+            <div class="field">
+              <label for="pdfsize">Page size</label>
+              <select id="pdfsize">
+                <option value="a4">A4 (210 × 297 mm)</option>
+                <option value="letter">US Letter</option>
+              </select>
+            </div>
+          </div>
+          <div class="field">
+            <label for="pdforient">Orientation</label>
+            <select id="pdforient">
+              <option value="auto">Auto (follow the image)</option>
+              <option value="portrait">Portrait</option>
+              <option value="landscape">Landscape</option>
+            </select>
+          </div>
+
+          <div class="actions">
+            <button type="button" class="btn btn--primary" id="pdfgo" disabled>Make PDF</button>
+            <button type="button" class="btn btn--ghost" id="pdfdl" disabled>Download PDF</button>
+          </div>
+          <p class="msg" id="pdfmsg" role="status"></p>
+        </section>
+      </div>
+    </div>
+
+    <div class="app__rest">
+      <section class="card" id="batchCard" hidden aria-labelledby="h-batch">
+        <div class="card__head">
+          <span class="step step--muted">★</span>
+          <h2 id="h-batch">Batch results</h2>
+          <span class="head-hint" id="batchSummary"></span>
+        </div>
+        <div class="table-wrap"><table class="batch" id="batchTable"></table></div>
+        <div class="actions">
+          <button type="button" class="btn btn--primary" id="zipBtn" disabled>Download ZIP</button>
+          <button type="button" class="btn btn--ghost" id="clearQueue">Clear queue</button>
+        </div>
+      </section>
+
+      <section class="card" id="presets" aria-labelledby="h-presets">
+        <div class="card__head">
+          <span class="step step--muted">☆</span>
+          <h2 id="h-presets">Your presets</h2>
+          <span class="head-hint">Saved in this browser only</span>
+        </div>
+        <p class="note">ResizeKB ships no official specifications. The built-in entries are generic examples — always copy the numbers from your own form.</p>
+
+        <div class="grid-2">
+          <div class="field"><label for="pn">Name</label><input id="pn" maxlength="60" placeholder="e.g. My exam photo"></div>
+          <div class="field"><label for="psrc">Source / reference (optional)</label><input id="psrc" maxlength="200" placeholder="Link or note"></div>
+        </div>
+
+        <div class="actions">
+          <button type="button" class="btn btn--ghost" id="psave">Save current settings</button>
+          <button type="button" class="btn btn--ghost" id="plink">Copy link</button>
+          <button type="button" class="btn btn--ghost" id="presetDel">Delete selected</button>
+          <button type="button" class="btn btn--ghost" id="pexp">Export JSON</button>
+          <button type="button" class="btn btn--ghost" id="pimp">Import JSON</button>
+          <input type="file" id="pfile" accept="application/json,.json" hidden>
+        </div>
+      </section>
+
+      <section class="card faq" id="faq" aria-labelledby="h-faq">
+        <div class="card__head">
+          <span class="step step--muted">?</span>
+          <h2 id="h-faq">Common questions</h2>
+        </div>
+
+        <details>
+          <summary>How do I reduce a photo to 50 KB?</summary>
+          <p>Add the photo, choose <strong>File size</strong> mode, press the 50 KB shortcut, pick JPG and press Process. The result panel shows the measured size and whether the limit was met.</p>
+        </details>
+        <details>
+          <summary>My form wants exact pixels and a size range. What do I do?</summary>
+          <p>Choose <strong>Both</strong>, then enter width, height, minimum KB and maximum KB exactly as written. If the range cannot be reached at those pixels, the result says so instead of silently giving you a wrong file.</p>
+        </details>
+        <details>
+          <summary>Why did the tool say my size limit failed?</summary>
+          <p>Very small limits on large or detailed images can be impossible at the requested dimensions. Reduce the pixel size, switch to JPG or WebP, or increase the limit. The tool never claims a file passes when the measured bytes say otherwise.</p>
+        </details>
+        <details>
+          <summary>Can I resize several images at once?</summary>
+          <p>Yes. Select or drop multiple files, set the limits once, and press <strong>Process all</strong>. Each result is listed with its measured size, and the finished files can be downloaded together as a ZIP.</p>
+        </details>
+        <details>
+          <summary>How does cropping work?</summary>
+          <p>Press <strong>Crop</strong>, drag the box to move it, or drag a corner or edge handle to resize it. With <em>Lock to output ratio</em> on, the box follows the width and height you entered. The crop applies to the single image you are editing.</p>
+        </details>
+        <details>
+          <summary>Can I print my name and date on the photo?</summary>
+          <p>Yes. In <strong>Crop, rotate &amp; stamp</strong>, tick <strong>Add a name / date stamp</strong>, type the name, choose a corner, size and colour, and optionally append today's date. The stamp is drawn at the output resolution with a soft halo for contrast, and it is included in batch results and PDFs too. Pick a dark colour for signatures on white paper and a light colour for photos.</p>
+        </details>
+        <details>
+          <summary>How do I share the exact limits with someone?</summary>
+          <p>Press <strong>Copy link</strong> in the presets card. The link stores the mode, width, height, KB range, format, fit, DPI and workflow in the part after <code>#</code>, so opening it fills those fields in automatically. It holds no image, no name and no account data, and the page never sends it anywhere.</p>
+        </details>
+        <details>
+          <summary>What does the DPI setting actually do?</summary>
+          <p>It writes a print-resolution tag (JFIF density for JPG, pHYs for PNG) so software and forms can read the intended DPI. It does not add pixels or improve detail — pick a resolution that matches the pixel size you need.</p>
+        </details>
+        <details>
+          <summary>Are my files uploaded?</summary>
+          <p>No. Decoding, cropping, compression and PDF creation happen in your browser. Only your presets and last-used settings are stored locally, and you can clear them by clearing site data.</p>
+        </details>
+        <details>
+          <summary>Are the presets official?</summary>
+          <p>No. ResizeKB is not affiliated with any government, exam body or portal. Built-in presets are examples only; always follow your own form's instructions.</p>
+        </details>
+        <details>
+          <summary>Keyboard shortcuts</summary>
+          <div class="shortcuts">
+            <div><span>Choose images</span><span><kbd>Ctrl</kbd>/<kbd>⌘</kbd> + <kbd>O</kbd></span></div>
+            <div><span>Paste an image</span><span><kbd>Ctrl</kbd>/<kbd>⌘</kbd> + <kbd>V</kbd></span></div>
+            <div><span>Process</span><span><kbd>Ctrl</kbd>/<kbd>⌘</kbd> + <kbd>Enter</kbd></span></div>
+            <div><span>Download result</span><span><kbd>Ctrl</kbd>/<kbd>⌘</kbd> + <kbd>S</kbd></span></div>
+            <div><span>Close the crop editor</span><span><kbd>Esc</kbd></span></div>
+          </div>
+        </details>
+        <details>
+          <summary>How it works and limits</summary>
+          <p>Files are decoded and re-encoded in your browser with the Canvas API. Magic bytes are checked, not just the file extension; files over 25 MB or 100 megapixels are rejected. File size is measured on the real output Blob. For a size target, JPG and WebP use a bounded binary search on quality, then scale down in steps when dimensions are free; PNG scales dimensions because it is lossless. An exact size is not always possible, and the result panel says so when it fails.</p>
+          <p>Not included yet: multi-page PDFs, PDF merge/split, and DPI-aware physical size output.</p>
+        </details>
+      </section>
+    </div>
+  </section>
+
+  <footer class="footer">
+    <span>ResizeKB — free, open source, no uploads.</span>
+    <nav aria-label="Footer">
+      <a href="PRIVACY.md">Privacy</a>
+      <a href="LICENSE">License</a>
+      <a href="README.md">Read me</a>
+    </nav>
+  </footer>
+</main>
+
+<div class="toasts" id="toasts" aria-live="polite" aria-atomic="false"></div>
+
+<script src="lib.js"></script>
+<script src="app.js"></script>
+</body>
+</html>
